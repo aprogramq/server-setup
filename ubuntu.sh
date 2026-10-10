@@ -6,8 +6,8 @@ if [[ "${EUID}" -ne 0 ]] && ! command -v sudo >/dev/null 2>&1; then
   exit 1
 fi
 
-if ! command -v apt-get >/dev/null 2>&1; then
-  echo "This script supports Ubuntu/Debian systems with apt-get." >&2
+if ! command -v apt >/dev/null 2>&1; then
+  echo "This script supports Ubuntu/Debian systems with apt." >&2
   exit 1
 fi
 
@@ -22,12 +22,13 @@ as_root() {
 }
 
 run_apt_update() {
-  as_root apt-get update
-  as_root env DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
+  as_root env DEBIAN_FRONTEND=noninteractive dpkg --configure -a
+  as_root apt update
+  as_root env DEBIAN_FRONTEND=noninteractive apt upgrade -y
 }
 
 install_packages() {
-  as_root env DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  as_root env DEBIAN_FRONTEND=noninteractive apt install -y \
     ca-certificates \
     curl \
     git \
